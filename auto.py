@@ -1,61 +1,33 @@
-import sys
-import os
 import cv2 as cv
 import numpy as np
 import time
 import datetime
 import mss
 import pyautogui
-import winsound
 import random
 from PIL import ImageGrab,ImageOps, Image
 from ppadb.client import Client as AdbClient
-
-client  = AdbClient(host="127.0.0.1", port=5037)
-
-device = client.device("127.0.0.1:5555")
-
-# result = device.screencap()
-# with open("screen.png", "wb") as fp:
-#     fp.write(result)
-
-# shell input touchscreen swipe 675 1780 1350 1500 3000
-
-
-# # getting the name of the directory
-# # where the this file is present.
-# current = os.path.dirname(os.path.realpath(__file__))
-# # Getting the parent directory name
-# # where the current directory is present.
-# parent = os.path.dirname(current)
-# # adding the parent directory to
-# # the sys.path.
-# sys.path.append(parent)
-sys.path.append('../..')
-# from windowcapture import WindowCapture
 from vision import Vision
 
-# monster_1 = Vision('monster1.png')
-# monster_2 = Vision('monster2.png')
-# monster_3 = Vision('monster3.png')
-# monster_4 = Vision('monster4.png')
-# guardian = Vision('guardian.png')
+# adb 연결
+client  = AdbClient(host="127.0.0.1", port=5037)
+device = client.device("127.0.0.1:5555")
+
+# 몬스터들 이름
 monster_all_array = ['monster1.png','monster2.png','monster3.png','monster4.png','guardian.png']
-# monster_all = Vision(monster_all_array)
 monster_1 = Vision(monster_all_array[0])
 monster_2 = Vision(monster_all_array[1])
 monster_3 = Vision(monster_all_array[2])
 monster_4 = Vision(monster_all_array[3])
 guardian = Vision(monster_all_array[4])
 
+# 내 캐릭터 이름
 my_character = Vision('../../../my_characters/met_chicken3.png')
 
+# 사망 메세지
 dead = Vision('dead_3.png')
 
 monitor = {"top": 35, "left": 1596, "width": 921, "height": 518}
-
-# black1 = (2467, 526)
-# black2 = (2570, 529)
 
 # 화면전환 감지에 쓰이는 좌표
 black1 = (2500, 530) # 오른쪽 하단 구석
@@ -178,7 +150,6 @@ def find_longest_distance(monster, my):
 
 # 어느 방향으로 움직여야할지 결정하는 함수
 def moveTo(x_axis, y_axis):
-    # print('timer : ', timer)
     if(x_axis < 0):
         direction(heading = 'left', distance = x_axis, )
     if(x_axis > 0):
@@ -229,20 +200,6 @@ def fight_monsters(monsters_locations, my_location):
 
 # 스킬 시전하는 함수
 def start_attack(swap, elapsed_time, prev_time_1, prev_time_2,prev_time_3,prev_time_4, prev_time_5, prev_time_6, prev_time_7, skill_1,skill_2,skill_3,skill_4,skill_5,skill_6):
-    # if(swap > 60):
-    #     device.shell("input touchscreen tap "+control)
-    #     device.shell("input touchscreen tap "+x)
-    #     device.shell("input touchscreen tap "+c)
-    #     device.shell("input touchscreen tap "+spacebar)
-    #     device.shell("input touchscreen tap "+control)
-    # #     pyautogui.press('ctrl')
-    # #     pyautogui.press('x')
-    # #     pyautogui.press('c')
-    # #     pyautogui.press('space')
-    # #     # pyautogui.click(c)
-    # #     # pyautogui.click(spacebar)
-    # #     pyautogui.press('ctrl')
-    #     prev_time_6 = elapsed_time
 
     if(skill_1 > 4.2):
         prev_time_1 = elapsed_time
