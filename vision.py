@@ -33,7 +33,6 @@ class Vision:
         # Get the all the positions from the match result that exceed our threshold
         locations = np.where(result >= threshold)
         locations = list(zip(*locations[::-1]))
-        #print(locations)
 
         # You'll notice a lot of overlapping rectangles get drawn. We can eliminate those redundant
         # locations by using groupRectangles().
@@ -50,11 +49,9 @@ class Vision:
         # in the result. I've set eps to 0.5, which is:
         # "Relative difference between sides of the rectangles to merge them into a group."
         rectangles, weights = cv.groupRectangles(rectangles, groupThreshold=1, eps=0.5)
-        #print(rectangles)
 
         points = []
         if len(rectangles):
-            #print('Found needle.')
 
             line_color = (0, 255, 0)
             line_type = cv.LINE_4
@@ -82,39 +79,10 @@ class Vision:
                     cv.drawMarker(haystack_img, (center_x, center_y), 
                                 color=marker_color, markerType=marker_type, 
                                 markerSize=40, thickness=2)
-        # line_color=(0, 255, 0)
-        # thickness=1 
-        # type_=cv.LINE_AA
-        # pxstep=50
-        # x = pxstep
-        # y = pxstep
-        # horizontal line
-        # x_count = 0
-        # while x < haystack_img.shape[1]:
-        #     cv.line(haystack_img, (x, 0), (x, haystack_img.shape[0]), color=line_color, lineType=type_, thickness=thickness)
-        #     x += pxstep
-        #     x_count+=1
+        
+        if debug_mode:
+            cv.imshow('Matches', haystack_img)
+            cv.waitKey()
+            cv.imwrite('result_click_point.jpg', haystack_img)
 
-        # vertical line
-        # y_count = 0
-        # while y < haystack_img.shape[0]:
-        #     cv.line(haystack_img, (0, y), (haystack_img.shape[1], y), color=line_color, lineType=type_, thickness=thickness)
-        #     y += pxstep
-        #     y_count += 1
-
-        # coords = np.zeros((y_count, x_count), dtype='i,i')
-        # for i in range(x_count):
-        #     x_axis = 25
-        #     y_axis = 25
-        #     print(i)
-        #     for j in range(y_count):
-        #         coords[i,j] = (x_axis, y_axis)
-        #         y_axis += 50
-        #     x_axis += 50
-        # if debug_mode:
-        #     cv.imshow('Matches', haystack_img)
-            # cv.waitKey()
-            # cv.imwrite('result_click_point.jpg', haystack_img)
-
-        # print(points)
         return points
