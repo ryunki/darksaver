@@ -1,39 +1,29 @@
-import sys
-import os
 import datetime
-
 import mss
-from PIL import Image, ImageGrab, ImageOps
+from PIL import ImageGrab, ImageOps
 import pyautogui
 
 import cv2 as cv
 import numpy as np
 import time
-import winsound
 import random
-sys.path.append('..')
+
 from vision import Vision
 
-# w, h = pyautogui.size()
-# print("PIL Screen Capture Speed Test")
-# print("Screen Resolution: " + str(w) + 'x' + str(h))
-
 img = None
-t0 = time.time()
-n_frames = 1
-monitor = {"top": 35, "left": 1596, "width": 921, "height": 518}
-# monitor = {"top": 1596, "left": 35, "width": 921, "height": 518}
 
+# 캡쳐할 모니터 크기 설정
+monitor = {"top": 35, "left": 1596, "width": 921, "height": 518}
+
+# 감지에 필요한 사진들
 my_character = Vision('../met_chicken3.png')
 dead = Vision('../dead_3.png')
 fountain = Vision('../fountain.png')
 portal = Vision('../ergion_portal.png')
 vacant = Vision('../vacancy.png')
 ergion_tile = Vision('../ergion_tile.png')
-
 question_mark = Vision('../question_mark.png')
 metchicken_ergion = Vision('../metchicken_ergion.png')
-
 outside_tile = Vision('../outside_tile.png')
 
 # 인벤토리 아이콘의 좌표 (화면전환 감지에 쓰임)
@@ -42,8 +32,9 @@ inven_icon_2 = (2319, 77)
 
 # 힐링 포션의 좌표
 heal=(2244, 397)
-hp = (1772, 50) # tactic's hp threshold for 2301 with cross and 500hp (healing 2 potion)
-# hp2 = (1788, 50) # tactic's hp threshold for 2844 with cross and 500hp (healing 2 potion)
+
+# 체력 떨어지는 구간 설정
+hp = (1772, 50)
 
 # 스킬의 좌표들
 a = (2247,318)
@@ -199,18 +190,9 @@ with mss.mss() as sct:
             if field_time > random.randint(6,7) and field_time < boss_death_time:
                 # 사냥터 안에서 딱 한번만 공격방향 아래로 향하게함
                 if pressDown == False:
-                    # print('pressDown activate: ', field_time, elapsed_time)
                     pyautogui.keyUp('up')
                     pyautogui.press('down')
                     pressDown = True
-                # pyautogui.click(a)
-                # pyautogui.click(s)
-                # pyautogui.click(d)
-                # pyautogui.click(x)
-                # pyautogui.click(c)
-                # pyautogui.click(spacebar)
-                # pyautogui.moveTo(prev_mouse_position[0], prev_mouse_position[1])
-                # continue
             # 사냥터에서 보스몹 죽는 시간이 됐거나 19초가 지났을때
             # field_time >= 19 조건을 넣은이유는 나머지값이 0이 안될때가 있음
             # boss_death_time이 고정값이 아니라 18이나 19중 랜덤값이기 때문
@@ -254,7 +236,7 @@ with mss.mss() as sct:
             skill_5 = elapsed_time - prev_skill_time_5
             swap = elapsed_time - prev_skill_time_6
             skill_6 = elapsed_time - prev_skill_time_7
-            # print(skill_1)
+
             if(swap > 60):
                 swapped = True
                 pyautogui.press('ctrl')
@@ -274,32 +256,31 @@ with mss.mss() as sct:
                 skill_a = True
                 prev_skill_time_1 = elapsed_time
                 pyautogui.click(a)
-                # pyautogui.moveTo(prev_mouse_position[0], prev_mouse_position[1])
+                
             if(skill_2 > 7.2):
                 skill_s = True
                 prev_skill_time_2 = elapsed_time
                 pyautogui.click(s)
-                # pyautogui.moveTo(prev_mouse_position[0], prev_mouse_position[1])
+                
             if(skill_3 > 7.2):
                 skill_d = True
                 prev_skill_time_3 = elapsed_time
                 pyautogui.click(d)
-                # pyautogui.moveTo(prev_mouse_position[0], prev_mouse_position[1])
+                
             if(skill_6 > 4.7):
                 skill_x = True
                 prev_skill_time_7 = elapsed_time
                 pyautogui.click(x)
-                # pyautogui.moveTo(prev_mouse_position[0], prev_mouse_position[1])
+                
             if(skill_4 > 2.2):
                 skill_c = True
                 prev_skill_time_4 = elapsed_time
                 pyautogui.click(c)
-                # pyautogui.moveTo(prev_mouse_position[0], prev_mouse_position[1])
+                
             if(skill_5 > 3.7):
                 skill_space = True
                 prev_skill_time_5 = elapsed_time
                 pyautogui.click(spacebar)
-                # pyautogui.moveTo(prev_mouse_position[0], prev_mouse_position[1])
 
         # 사냥터 밖에서 포탈입장하는 상태
         if field == False:
@@ -370,8 +351,6 @@ with mss.mss() as sct:
                 pressDown = False
                 # 내 위치 초기화
                 my_location = []
-                # print('started at: ',start)
-                # print(datetime.datetime.now())
                 print('------------------------------')
 
         # Break loop and end test
