@@ -186,15 +186,17 @@ with mss.mss() as sct:
             field_time = elapsed_time - prev_field_time
             # 사냥터 입장후 보스한테 접근후 잡는데 걸리는 시간 18 ~ 19초
             boss_death_time = random.randint(18,19)
-            # 사냥터 입장후 6 ~ 7초후와 random_time 사이동안 실행
+            # 사냥터 입장후 6 ~ 7초후와 boss_death_time 사이동안 실행
             if field_time > random.randint(6,7) and field_time < boss_death_time:
                 # 사냥터 안에서 딱 한번만 공격방향 아래로 향하게함
                 if pressDown == False:
+                    # 위로 움직이는것을 멈춘후 
                     pyautogui.keyUp('up')
+                    # 공격방향을 아래로 향하게한다
                     pyautogui.press('down')
                     pressDown = True
             # 사냥터에서 보스몹 죽는 시간이 됐거나 19초가 지났을때
-            # field_time >= 19 조건을 넣은이유는 나머지값이 0이 안될때가 있음
+            # field_time >= 19 조건을 넣은이유는 field_time % boss_death_tim 의 나머지값이 0이 안될때가 있음
             # boss_death_time이 고정값이 아니라 18이나 19중 랜덤값이기 때문
             if field_time % boss_death_time == 0 or field_time >= 19:
                 # 아래로 움직이는 버튼 한번만 누르게한다
@@ -203,7 +205,8 @@ with mss.mss() as sct:
                     pyautogui.keyDown('down')
                     goDown = True
 
-            # 사냥터에서 26초가 지났을때 좌우로 움직이기
+            # 사냥터에서 26초가 지났을때 가운데 타일 기준으로 움직여서 위치조정하기
+            # 26초인 이유는 넉백안당했을시 26초 이내에 사냥터 밖으로 나갈수있기때문
             if field_time >= 26:
                 # 사냥터 정중앙에 있는 타일 좌표값
                 tile = ergion_tile.find_image(img, 0.7, 'rectangles')
@@ -211,9 +214,9 @@ with mss.mss() as sct:
                 me = metchicken_ergion.find_image(img, 0.6, 'rectangles')
                 # 내 캐릭터의 좌표와 사냥터 타일이 감지된경우
                 if len(tile) > 0 and len(me) > 0:
-                    # 내 좌표의 x 값을 담은 변수
+                    # 내 좌표의 x-axis 값을 담은 변수
                     my_location = me[0][0]
-                    # 타일 좌표의 x 값을 감은 변수
+                    # 타일 좌표의 x-axis 값을 감은 변수
                     field_tile_location = tile[0][0]
                     # 타일이 내 위치보다 오른쪽에 위치했을경우 오른쪽으로 움직인다
                     if field_tile_location > my_location:
@@ -227,7 +230,8 @@ with mss.mss() as sct:
                         pyautogui.keyDown('left')
 
             # 각 변수는 스킬의 쿨타임을 재는 용도
-            # 현재 시간에서 마지막에 스킬을 시전했던 시간을 뺀다
+            # 현재 시간에서 마지막에 스킬을 시전했던 시간을 뺀 수치를 각 변수에 담는다
+            # 각 변수의 수치가 해당스킬의 쿨타임보다 높다면 스킬시전 
             hit = elapsed_time - prev_skill_time
             skill_1 = elapsed_time - prev_skill_time_1
             skill_2 = elapsed_time - prev_skill_time_2
@@ -236,7 +240,7 @@ with mss.mss() as sct:
             skill_5 = elapsed_time - prev_skill_time_5
             swap = elapsed_time - prev_skill_time_6
             skill_6 = elapsed_time - prev_skill_time_7
-
+            # 스킬창 스왑
             if(swap > 60):
                 swapped = True
                 pyautogui.press('ctrl')
@@ -246,39 +250,42 @@ with mss.mss() as sct:
                 prev_skill_time_6 = elapsed_time
             # 스킬 스왑이 제대로 안됐을경우
             if swapped == True:
+                # 스킬 빈칸의 물음표 감지
                 question = question_mark.find_image(img, 0.6, 'rectangles')
+                # 만약 감지가 되었다면 
                 if len(question) > 0:
                     pyautogui.press('ctrl')
+                    # 이 코드를 단한번만 실행하기위한 변수
                     swapped = False
 
             # 각 스킬의 쿨타임이 지났을때 스킬 시전
             if(skill_1 > 5.2):
-                skill_a = True
+                # 스킬시전 시간을 변수에 저장
                 prev_skill_time_1 = elapsed_time
                 pyautogui.click(a)
                 
             if(skill_2 > 7.2):
-                skill_s = True
+                # 스킬시전 시간을 변수에 저장
                 prev_skill_time_2 = elapsed_time
                 pyautogui.click(s)
                 
             if(skill_3 > 7.2):
-                skill_d = True
+                # 스킬시전 시간을 변수에 저장
                 prev_skill_time_3 = elapsed_time
                 pyautogui.click(d)
                 
             if(skill_6 > 4.7):
-                skill_x = True
+                # 스킬시전 시간을 변수에 저장
                 prev_skill_time_7 = elapsed_time
                 pyautogui.click(x)
                 
             if(skill_4 > 2.2):
-                skill_c = True
+                # 스킬시전 시간을 변수에 저장
                 prev_skill_time_4 = elapsed_time
                 pyautogui.click(c)
                 
             if(skill_5 > 3.7):
-                skill_space = True
+                # 스킬시전 시간을 변수에 저장
                 prev_skill_time_5 = elapsed_time
                 pyautogui.click(spacebar)
 
@@ -312,11 +319,14 @@ with mss.mss() as sct:
             if (len(vacancy) > 0 and room_selection == True):
                 print('---------------------------')
                 print('빈방 개수: ',len(vacancy))
-                # 이전 대기실창의 빈방 개수가 현재 빈방 개수와 다를경우
-                # (예: 현재 2번 방에 다른 유저가 들어가있을경우) 
-                if vacant_room_count != len(vacancy):
-                    # 첫번째 방으로 초기화
+                # 현재 들어간 사냥터 방이 마지막 방일경우
+                if vacant_room_number >= len(vacancy)-1 :
+                    print('방 순서 초기화')
+                    # 다음번에 첫번째 방으로 들어갈수있도록 초기화 
                     vacant_room_number = 0
+                else:
+                    # 마지막 방이 아닐경우 다음 방으로 들어갈수있도록한다
+                    vacant_room_number += 1
                 print(vacant_room_number+1, '번방 입장') 
                 # n번째 방을 클릭한다
                 pyautogui.click(vacancy[vacant_room_number][0]+1350, vacancy[vacant_room_number][1]+40)
@@ -324,23 +334,13 @@ with mss.mss() as sct:
                 pyautogui.keyDown('up')
                 # 화면전환 끝날때까지 기다리는 시간
                 time.sleep(0.5)
-                # 사냥터 진입후 대기실창이 한번더 뜨는 버그가 있기때문에 취소버튼을 누름
+                # 사냥터 진입후 대기실창이 한번더 뜨는 버그가 있기때문에 창을 없애는 취소버튼을 누름
                 pyautogui.press('t')
                 # 대기실창 다 없어질때까지 기다리는 시간
                 time.sleep(0.7)
                 # 사냥터 한번 들어갔을때마다 기록
                 visit_count += 1
                 print('방 입장 횟수: ', visit_count)
-                # 현재의 빈 사냥터 방 개수를 저장
-                vacant_room_count = len(vacancy)
-                # 현재 들어간 사냥터 방이 마지막 방일경우
-                if vacant_room_number == len(vacancy)-1 :
-                    print('마지막방에 도달')
-                    # 다음번에 첫번째 방으로 들어갈수있도록 초기화 
-                    vacant_room_number = 0
-                else:
-                    # 마지막 방이 아닐경우 다음 방으로 들어갈수있도록한다
-                    vacant_room_number += 1
                 # 사냥터 코드 실행하도록 설정
                 field = True
                 # 사냥터에서 쓰일 현재 시간 저장
