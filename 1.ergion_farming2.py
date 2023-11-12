@@ -293,7 +293,7 @@ with mss.mss() as sct:
         if field == False:
             print(elapsed_time)
             # 한시간뒤에 프로그램 종료
-            if elapsed_time > 3500:
+            if elapsed_time > 3600:
                 break
             # 포탈 감지   
             portal_ = portal.find_image(img, 0.8, 'rectangles')
